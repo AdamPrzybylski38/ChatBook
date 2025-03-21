@@ -12,5 +12,5 @@ Wymagania:
 
 Instalacja:
 1. Uruchom LM Studio lub z poziomu terminala załaduj model "meta-llama-3.1-8b-instruct".
-2. Uruchom środowisko wirtualne chbk-env poprzez polecenie: "source chbk-env/bin/activate".
+2. Stwórz i uruchom środowisko wirtualne "chbk-env".
 3. Uruchom index.php poprzez wybrany interpreter PHP (domyślnie xampp).
