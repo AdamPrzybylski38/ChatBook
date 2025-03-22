@@ -1,4 +1,7 @@
 <?php
+$start_lms = "lms load meta-llama-3.1-8b-instruct";
+shell_exec($start_lms);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $query = escapeshellarg($_POST['query']);
     $command = "source /Applications/XAMPP/xamppfiles/htdocs/ChatBook/chbk-env/bin/activate && python3 connect.py " . $query . " 2>&1";
@@ -106,9 +109,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         @keyframes dot-blink {
-            0%, 100% {
+
+            0%,
+            100% {
                 opacity: 0;
             }
+
             50% {
                 opacity: 1;
             }
@@ -141,8 +147,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <header>
         <div class="container mt-3">
             <h1 style="color: #007bff; font-size: 2.5rem; text-align: center;">
-            <img src="chbk_logo.svg" alt="ChatBook Logo" style="width: 5rem; height: 5rem; margin-right: 0.5rem; vertical-align: middle;">    
-            ChatBook
+                <img src="chbk_logo.svg" alt="ChatBook Logo"
+                    style="width: 5rem; height: 5rem; margin-right: 0.5rem; vertical-align: middle;">
+                ChatBook
                 <span class="header-badge">v0.02</span>
             </h1>
         </div>
