@@ -2,7 +2,7 @@
 Aplikacja webowa umożliwiająca interaktywne poznawanie książki z AI
 
 Zmiany:
-v0.01 - prosty interfejs umożliwiający pisanie z lokalnym modelem AI
+v0.02 - prosty interfejs umożliwiający pisanie z lokalnym modelem AI wzbogacony o animacje
 
 Wymagania:
 1. PHP 8.24 (xampp)
