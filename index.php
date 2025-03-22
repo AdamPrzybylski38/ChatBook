@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             width: fit-content;
             text-align: right;
             color: #333;
-            background-color:rgb(150, 200, 255);
+            background-color: #96c8ff;
             padding: 0.5rem;
             border-radius: 1rem 0 1rem 1rem;
             margin-bottom: 0.5rem;
@@ -140,7 +140,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <header>
         <div class="container mt-3">
-            <h1 style="color: #007bff; font-size: 2.5rem; text-align: center;">ChatBook
+            <h1 style="color: #007bff; font-size: 2.5rem; text-align: center;">
+            <img src="chbk_logo.svg" alt="ChatBook Logo" style="width: 5rem; height: 5rem; margin-right: 0.5rem; vertical-align: middle;">    
+            ChatBook
                 <span class="header-badge">v0.02</span>
             </h1>
         </div>
