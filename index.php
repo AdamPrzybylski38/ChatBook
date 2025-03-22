@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .message-ai {
-            margin-right: 15%;
+            margin-right: auto;
             width: fit-content;
             text-align: left;
             color: #333;
@@ -74,6 +74,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 0.5rem;
             border-radius: 0 1rem 1rem 1rem;
             margin-bottom: 0.5rem;
+        }
+
+        .loading-dots {
+            display: none;
+            margin-right: auto;
+            width: fit-content;
+            text-align: left;
+            color: #333;
+            background-color: transparent;
+            padding: 0.5rem;
+            border-radius: 0 1rem 1rem 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .loading-dots span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #333;
+            animation: dot-blink 1s ease-in-out infinite;
+        }
+
+        .loading-dots span:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .loading-dots span:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes dot-blink {
+            0%, 100% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
         }
 
         .header-badge {
@@ -132,13 +170,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 var query = $("#query").val();
                 if (!query) return;
                 $("#query").val("");
+
+                $("#response-box")
+                    .append('<div class="message-user">' + query + '</div>');
+
+                var loadingDots = $('<div class="loading-dots"><span></span><span></span><span></span></div>');
+                $("#response-box").append(loadingDots);
+                loadingDots.show();
+
                 $.post("index.php", { query: query }, function (data) {
                     try {
                         var response = JSON.parse(data).response;
+                        loadingDots.remove();
                         $("#response-box")
-                            .append('<div class="message-user">' + query + '</div>')
                             .append('<div class="message-ai">' + response + '</div>');
                     } catch (e) {
+                        loadingDots.remove();
                         $("#response-box").html("Błąd w przetwarzaniu odpowiedzi");
                     }
                 });
