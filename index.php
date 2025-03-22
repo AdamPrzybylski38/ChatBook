@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .message-ai {
-            margin-right: auto;
+            margin-right: 10%;
             width: fit-content;
             text-align: left;
             color: #333;
