@@ -141,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <header>
         <div class="container mt-3">
             <h1 style="color: #007bff; font-size: 2.5rem; text-align: center;">ChatBook
-                <span class="header-badge">v0.01</span>
+                <span class="header-badge">v0.02</span>
             </h1>
         </div>
     </header>
