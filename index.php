@@ -55,7 +55,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .message-user {
-            margin-left: 20%;
+            margin-left: auto;
+            width: fit-content;
             text-align: right;
             color: #333;
             background-color:rgb(150, 200, 255);
@@ -65,7 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .message-ai {
-            margin-right: 20%;
+            margin-right: 15%;
+            width: fit-content;
             text-align: left;
             color: #333;
             background-color: #e7f2fe;
