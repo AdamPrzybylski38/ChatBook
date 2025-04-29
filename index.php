@@ -1,220 +1,108 @@
 <?php
-$start_lms = "lms load meta-llama-3.1-8b-instruct";
-shell_exec($start_lms);
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $query = escapeshellarg($_POST['query']);
-    $command = "source /Applications/XAMPP/xamppfiles/htdocs/ChatBook/chbk-env/bin/activate && python3 connect.py " . $query . " 2>&1";
-    $output = shell_exec($command);
-    echo json_encode(['response' => nl2br(htmlspecialchars($output))]);
-    exit;
+session_start();
+if (isset($_SESSION['id_user'])) {
+    header('Location: chat.php');
+    exit();
 }
 ?>
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pl">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ChatBook</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background-color: #f8f9fa;
-            padding-top: 2rem;
-            line-height: 1.6;
-            color: #333;
-        }
-
-        .chat-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: calc(100vh - 10rem);
-            width: 100%;
-        }
-
-        #response-box {
-            width: 80%;
-            max-width: 800px;
-            min-height: 400px;
-            max-height: 500px;
-            overflow-y: auto;
-            padding: 1rem;
-            border-radius: 1rem;
-            background-color: #ffffff;
-            border: 1px solid #ccc;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .input-group {
-            width: 80%;
-            max-width: 600px;
-            margin-top: 1rem;
-        }
-
-        .message-user {
-            margin-left: auto;
-            width: fit-content;
-            text-align: right;
-            color: #333;
-            background-color: #96c8ff;
-            padding: 0.5rem;
-            border-radius: 1rem 0 1rem 1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .message-ai {
-            margin-right: 10%;
-            width: fit-content;
-            text-align: left;
-            color: #333;
-            background-color: #e7f2fe;
-            padding: 0.5rem;
-            border-radius: 0 1rem 1rem 1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .loading-dots {
-            display: none;
-            margin-right: auto;
-            width: fit-content;
-            text-align: left;
-            color: #333;
-            background-color: transparent;
-            padding: 0.5rem;
-            border-radius: 0 1rem 1rem 1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .loading-dots span {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: #333;
-            animation: dot-blink 1s ease-in-out infinite;
-        }
-
-        .loading-dots span:nth-child(2) {
-            animation-delay: 0.3s;
-        }
-
-        .loading-dots span:nth-child(3) {
-            animation-delay: 0.6s;
-        }
-
-        @keyframes dot-blink {
-
-            0%,
-            100% {
-                opacity: 0;
-            }
-
-            50% {
-                opacity: 1;
-            }
-        }
-
-        .header-badge {
-            background-color: #007bff;
-            color: white;
-            font-size: 0.8rem;
-            padding: 0.2rem 0.6rem;
-            border-radius: 1rem;
-            display: inline-block;
-            margin-left: 0.5rem;
-        }
-
-        .footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: #e7f2fe;
-            text-align: center;
-            padding: 1rem 0;
-            border-top: 1px solid #ccc;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 
-<body>
+<body class="bg-light">
     <header>
         <div class="container mt-3">
             <h1 style="color: #007bff; font-size: 2.5rem; text-align: center;">
                 <img src="chbk_logo.svg" alt="ChatBook Logo"
                     style="width: 5rem; height: 5rem; margin-right: 0.5rem; vertical-align: middle;">
                 ChatBook
-                <span class="header-badge">v0.02</span>
+                <span class="header-badge">v0.03</span>
             </h1>
         </div>
     </header>
 
-    <main>
-        <div class="chat-container">
-            <div id="response-box" class="mb-3"></div>
-            <div class="input-group">
-                <input type="text" name="query" id="query" class="form-control" placeholder="Wpisz zapytanie..."
-                    required>
-                <button id="send-btn" class="btn btn-primary">Wyślij</button>
+    <main class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div id="loginForm" style="display: block;">
+                    <h3>Logowanie</h3>
+                    <form action="login.php" method="post">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Hasło</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Zaloguj</button>
+
+                        <button id="registerBtn" class="btn btn-success">Zarejestruj się</button>
+                    </form>
+
+                    <hr>
+
+                </div>
+
+                <div id="registrationForm" style="display: none;">
+                    <h3>Rejestracja</h3>
+                    <form action="register.php" method="post">
+                        <div class="mb-3">
+                            <label for="email-reg" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email-reg" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Nazwa użytkownika</label>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password-reg" class="form-label">Hasło</label>
+                            <input type="password" class="form-control" id="password-reg" name="password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirm-password" class="form-label">Powtórz hasło</label>
+                            <input type="password" class="form-control" id="confirm-password" name="confirm_password"
+                                required>
+                        </div>
+                        <button type="submit" class="btn btn-success">Zarejestruj się</button>
+
+                        <hr>
+
+                        <button id="loginBtn" class="btn btn-primary">Wróć do logowania</button>
+                    </form>
+                </div>
             </div>
         </div>
     </main>
 
-    <footer>
-        <div class="footer">
-            Aplikacja w fazie testowej<br>
-            Model: meta-llama-3.1-8b-instruct
-        </div>
+    <footer></footer>
+    <div class="footer">
+        Model: meta-llama-3.1-8b-instruct  
+    </div>
     </footer>
 
     <script>
         $(document).ready(function () {
-            function sendQuery() {
-                var query = $("#query").val();
-                if (!query) return;
-                $("#query").val("");
-
-                $("#response-box")
-                    .append('<div class="message-user">' + query + '</div>');
-
-                var loadingDots = $('<div class="loading-dots"><span></span><span></span><span></span></div>');
-                $("#response-box").append(loadingDots);
-                loadingDots.show();
-
-                $.post("index.php", { query: query }, function (data) {
-                    try {
-                        var response = JSON.parse(data).response;
-                        loadingDots.remove();
-                        $("#response-box")
-                            .append('<div class="message-ai">' + response + '</div>');
-                    } catch (e) {
-                        loadingDots.remove();
-                        $("#response-box").html("Błąd w przetwarzaniu odpowiedzi");
-                    }
-                });
-            }
-
-            $("#send-btn").click(sendQuery);
-            $("#query").keypress(function (event) {
-                if (event.key === 'Enter') {
-                    event.preventDefault();
-                    sendQuery();
-                }
+            $('#registerBtn').click(function () {
+                $('#loginForm').hide();
+                $('#registrationForm').show();
             });
 
-            $(window).on('load', function () {
-                var responseBox = $('#response-box');
-                responseBox.scrollTop(responseBox[0].scrollHeight);
+            $('#loginBtn').click(function () {
+                $('#registrationForm').hide();
+                $('#loginForm').show();
             });
         });
     </script>
-
 </body>
 
 </html>
