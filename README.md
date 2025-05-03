@@ -24,26 +24,25 @@ CREATE DATABASE ChatBook;
 
 USE ChatBook;
 
-CREATE TABLE users (
-    id_user INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL
+CREATE TABLE users (\
+    id_user INT AUTO_INCREMENT PRIMARY KEY,\
+    username VARCHAR(50) NOT NULL,\
+    email VARCHAR(100) NOT NULL UNIQUE,\
+    password VARCHAR(255) NOT NULL\
 );
 
-CREATE TABLE chats (
-    id_chat INT AUTO_INCREMENT PRIMARY KEY,
-    id_user INT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE
+CREATE TABLE chats (\
+    id_chat INT AUTO_INCREMENT PRIMARY KEY,\
+    id_user INT NOT NULL,\
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\
+    FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE\
 );
 
--- Modyfikacja chat_history
-CREATE TABLE chat_history (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    id_chat INT NOT NULL,
-    prompt TEXT NOT NULL,
-    completion TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_chat) REFERENCES chats(id_chat) ON DELETE CASCADE
+CREATE TABLE chat_history (\
+    id INT AUTO_INCREMENT PRIMARY KEY,\
+    id_chat INT NOT NULL,\
+    prompt TEXT NOT NULL,\
+    completion TEXT NOT NULL,\
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\
+    FOREIGN KEY (id_chat) REFERENCES chats(id_chat) ON DELETE CASCADE\
 );
