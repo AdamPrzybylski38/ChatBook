@@ -1,5 +1,5 @@
 # ChatBook
-Aplikacja webowa umożliwiająca interaktywne poznawanie książki z AI\
+Aplikacja webowa umożliwiająca interaktywne poznawanie książki z AI
 
 ## Zmiany:
 v0.02 - prosty interfejs umożliwiający pisanie z lokalnym modelem AI wzbogacony o animacje\
