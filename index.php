@@ -25,7 +25,7 @@ if (isset($_SESSION['id_user'])) {
                 <img src="chbk_logo.svg" alt="ChatBook Logo"
                     style="width: 5rem; height: 5rem; margin-right: 0.5rem; vertical-align: middle;">
                 ChatBook
-                <span class="header-badge">v0.03</span>
+                <span class="header-badge">v0.04</span>
             </h1>
         </div>
     </header>
