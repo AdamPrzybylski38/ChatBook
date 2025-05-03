@@ -4,7 +4,7 @@ Aplikacja webowa umożliwiająca interaktywne poznawanie książki z AI
 ## Zmiany:
 v0.02 - prosty interfejs umożliwiający pisanie z lokalnym modelem AI wzbogacony o animacje\
 v0.03 - system logowania i zapis historii chatu do bazy danych\
-v0.04 - tworzenie nowych konwersacji\
+v0.04 - tworzenie nowych konwersacji
 
 ## Wymagania:
 1. PHP 8.24 (xampp)
