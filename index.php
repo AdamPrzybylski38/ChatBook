@@ -49,7 +49,7 @@ if (isset($_SESSION['id_user'])) {
           <img src="chbk_logo.svg" alt="ChatBook Logo"
             style="width: 3rem; height: 3rem; margin-right: 0.5rem;">
           <h1 class="mb-0 fs-3" style="color: #007bff;">ChatBook
-            <span class="header-badge">v0.05</span>
+            <span class="header-badge">v0.06</span>
           </h1>
         </div>
       </div>
@@ -98,16 +98,12 @@ if (isset($_SESSION['id_user'])) {
                 </div>
                 <div class="d-flex justify-content-between">
                     <button type="submit" class="btn btn-success">Zarejestruj się</button>
-                    <button id="loginBtn" type="button" class="btn btn-primary">Wróć do logowania</button>
+                    <button id="loginBtn" type="button" class="btn btn-secondary">Wróć do logowania</button>
                 </div>
             </form>
         </div>
     </div>
 </main>
-
-<footer>
-    <div class="footer">Model: meta-llama-3.1-8b-instruct</div>
-</footer>
 
 <script>
     $(document).ready(function () {

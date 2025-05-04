@@ -102,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <img src="chbk_logo.svg" alt="ChatBook Logo"
             style="width: 3rem; height: 3rem; margin-right: 0.5rem;">
           <h1 class="mb-0 fs-3" style="color: #007bff;">ChatBook
-            <span class="header-badge">v0.05</span>
+            <span class="header-badge">v0.06</span>
           </h1>
         </div>
       </div>
@@ -110,8 +110,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div class="d-flex align-items-center flex-shrink-0">
         <h2 class="mb-0 fs-5 me-3">Witaj, <?= htmlspecialchars($_SESSION["username"]) ?>!</h2>
         <a href="logout.php" class="btn btn-danger">Wyloguj się</a>
+        <a href="interests.php" class="btn btn-outline-primary ms-3">Zainteresowania</a>
       </div>
-
     </div>
   </div>
 </header>
@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <footer>
     <div class="footer">
-        Model: meta-llama-3.1-8b-instruct
+        Model: bielik-11b-v2.3-instruct
     </div>
 </footer>
 
@@ -144,8 +144,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!query) return;
             $("#query").val("");
 
-            $("#response-box")
-                .append('<div class="message-user">' + query + '</div>');
+            var userMessage = $('<div>', {
+                class: 'message-user',
+                text: query
+            });
+            $("#response-box").append(userMessage);
 
             var loadingDots = $('<div class="loading-dots"><span></span><span></span><span></span></div>');
             $("#response-box").append(loadingDots);
@@ -156,8 +159,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 try {
                     var response = JSON.parse(data).response;
                     loadingDots.remove();
-                    $("#response-box")
-                        .append('<div class="message-ai">' + response + '</div>');
+
+                    var aiMessage = $('<div>', {
+                        class: 'message-ai',
+                        html: response
+                    });
+                    $("#response-box").append(aiMessage);
+
                     scrollToBottom();
                 } catch (e) {
                     loadingDots.remove();

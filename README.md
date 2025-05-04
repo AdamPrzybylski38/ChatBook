@@ -6,6 +6,7 @@ v0.02 - prosty interfejs umożliwiający pisanie z lokalnym modelem AI wzbogacon
 v0.03 - system logowania i zapis historii chatu do bazy danych\
 v0.04 - tworzenie nowych konwersacji\
 v0.05 - dodano logi aktywności użytkoników, zachowanie kontekstu rozmowy
+v0.06 - dodano wybór zainteresowań
 
 ## Wymagania:
 1. PHP 8.24 (xampp)

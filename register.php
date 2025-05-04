@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $_SESSION['id_activity'] = mysqli_insert_id($connect);
 
-        header('Location: chat.php');
+        header('Location: interests.php');
         exit();
     } else {
         echo "Błąd podczas rejestracji.";
