@@ -12,7 +12,7 @@ v0.06 - dodano wybór zainteresowań, poprawiono błędy
 1. PHP 8.24 (xampp)
 2. Python 3.13.2
 3. LM Studio 0.3.13 + Python SDK
-4. meta-llama-3.1-8b-instruct (lub inny wybrany model, wymagana zmiana w connect.py)
+4. bielik-11b-v2.3-instruct (lub inny wybrany model, wymagana zmiana w connect.py)
 
 ## Instalacja:
 1. Uruchom LM Studio lub z poziomu terminala załaduj model "bielik-11b-v2.3-instruct".
