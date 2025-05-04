@@ -15,7 +15,7 @@ v0.06 - dodano wybór zainteresowań
 4. meta-llama-3.1-8b-instruct (lub inny wybrany model, wymagana zmiana w connect.py)
 
 ## Instalacja:
-1. Uruchom LM Studio lub z poziomu terminala załaduj model "meta-llama-3.1-8b-instruct".
+1. Uruchom LM Studio lub z poziomu terminala załaduj model "bielik-11b-v2.3-instruct".
 2. Stwórz i uruchom środowisko wirtualne "chbk-env".
 3. Zainstaluj lmstudio-python w środowisku wirtualnym.
 4. Stwórz baze danych ChatBook w phpMyAdmin.
