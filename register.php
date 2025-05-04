@@ -33,6 +33,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (mysqli_stmt_execute($stmt_insert_user)) {
         $_SESSION['id_user'] = mysqli_insert_id($connect);
         $_SESSION['username'] = $username;
+
+        $insert = "INSERT INTO activity (id_user) VALUES (?)";
+        $insert_stmt = mysqli_prepare($connect, $insert);
+        mysqli_stmt_bind_param($insert_stmt, 'i', $_SESSION['id_user']);
+        mysqli_stmt_execute($insert_stmt);
+
+        $_SESSION['id_activity'] = mysqli_insert_id($connect);
+
         header('Location: chat.php');
         exit();
     } else {

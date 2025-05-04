@@ -17,6 +17,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (password_verify($password, $user['password'])) {
             $_SESSION['id_user'] = $user['id_user'];
             $_SESSION['username'] = $user['username'];
+
+            $insert = "INSERT INTO activity (id_user) VALUES (?)";
+            $insert_stmt = mysqli_prepare($connect, $insert);
+            mysqli_stmt_bind_param($insert_stmt, 'i', $user['id_user']);
+            mysqli_stmt_execute($insert_stmt);
+
+            $_SESSION['id_activity'] = mysqli_insert_id($connect);
+
             header('Location: chat.php');
             exit();
         } else {

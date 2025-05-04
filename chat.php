@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 if (!isset($_SESSION['id_user'])) {
     header('Location: index.php');
     exit();
@@ -27,10 +28,36 @@ if (!isset($_SESSION['id_chat']) || isset($_GET['new_chat'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $query = escapeshellarg($_POST['query']);
+    $user_query = $_POST['query'];
 
-    $command = "source /Applications/XAMPP/xamppfiles/htdocs/ChatBook/chbk-env/bin/activate && python3 connect.py " . $query . " 2>&1";
+    $stmt = mysqli_prepare($connect, "SELECT prompt, completion FROM chat_history WHERE id_chat = ? ORDER BY created_at ASC");
+    if (!$stmt) {
+        die("Błąd przygotowania zapytania: " . mysqli_error($connect));
+    }
+    mysqli_stmt_bind_param($stmt, "i", $_SESSION['id_chat']);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    $history = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $history[] = [
+            "prompt" => $row['prompt'],
+            "completion" => $row['completion']
+        ];
+    }
+    mysqli_stmt_close($stmt);
+
+    $history_json = escapeshellarg(json_encode($history, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+
+    $escaped_query = escapeshellarg($user_query);
+
+    $command = "source /Applications/XAMPP/xamppfiles/htdocs/ChatBook/chbk-env/bin/activate && python3 connect.py $escaped_query $history_json 2>&1";
+
     $output = shell_exec($command);
+
+    if ($output === null) {
+        die("Błąd wykonania skryptu Python.");
+    }
 
     $response = nl2br(htmlspecialchars($output));
 
@@ -38,14 +65,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$stmt) {
         die("Błąd przygotowania zapytania: " . mysqli_error($connect));
     }
-    mysqli_stmt_bind_param($stmt, "iss", $_SESSION['id_chat'], $query, $response);
+    mysqli_stmt_bind_param($stmt, "iss", $_SESSION['id_chat'], $user_query, $response);
     if (!mysqli_stmt_execute($stmt)) {
         die("Błąd wykonania zapytania: " . mysqli_stmt_error($stmt));
     }
+    mysqli_stmt_close($stmt);
 
     echo json_encode(['response' => $response]);
-
-    mysqli_stmt_close($stmt);
     exit();
 }
 ?>
@@ -64,21 +90,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
 <header>
-    <div class="container mt-3 position-relative">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-            <a href="chat.php?new_chat=1" class="btn btn-outline-primary">Nowy chat</a>
-            <div class="d-flex align-items-center">
-                <h2 class="me-3 mb-0 fs-4">Witaj, <?= htmlspecialchars($_SESSION["username"]) ?>!</h2>
-                <a href="logout.php" class="btn btn-danger">Wyloguj się</a>
-            </div>
+  <div class="container mt-3 position-relative">
+    <div class="d-flex justify-content-between align-items-center mb-4 position-relative">
+
+      <div class="flex-shrink-0">
+        <a href="chat.php?new_chat=1" class="btn btn-outline-primary">Nowy chat</a>
+      </div>
+
+      <div class="position-absolute top-50 start-50 translate-middle-x" style="transform: translate(-50%, -50%);">
+        <div class="d-flex align-items-center">
+          <img src="chbk_logo.svg" alt="ChatBook Logo"
+            style="width: 3rem; height: 3rem; margin-right: 0.5rem;">
+          <h1 class="mb-0 fs-3" style="color: #007bff;">ChatBook
+            <span class="header-badge">v0.05</span>
+          </h1>
         </div>
-        <h1 class="text-center" style="color: #007bff; font-size: 2.5rem;">
-            <img src="chbk_logo.svg" alt="ChatBook Logo"
-                style="width: 5rem; height: 5rem; margin-right: 0.5rem; vertical-align: middle;">
-            ChatBook
-            <span class="header-badge">v0.04</span>
-        </h1>
+      </div>
+
+      <div class="d-flex align-items-center flex-shrink-0">
+        <h2 class="mb-0 fs-5 me-3">Witaj, <?= htmlspecialchars($_SESSION["username"]) ?>!</h2>
+        <a href="logout.php" class="btn btn-danger">Wyloguj się</a>
+      </div>
+
     </div>
+  </div>
 </header>
 
 <main>
