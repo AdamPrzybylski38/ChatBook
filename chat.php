@@ -116,6 +116,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </div>
 </header>
 
+<br>
+
 <main>
     <div class="chat-container">
         <div id="response-box" class="mb-3"></div>
@@ -125,6 +127,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 </main>
+
+<br>
 
 <footer>
     <div class="footer">

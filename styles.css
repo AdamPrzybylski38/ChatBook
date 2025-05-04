@@ -14,7 +14,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem; /* trochę większy padding dla spójności */
+    padding: 1rem 2rem;
     margin-bottom: 2rem;
 }
 
@@ -52,8 +52,8 @@ body {
 #response-box {
     width: 80%;
     max-width: 100vh;
-    min-height: 10vh;
-    max-height: 50vh;
+    min-height: 55vh;
+    max-height: 65vh;
     overflow-y: auto;
     padding: 1rem;
     border-radius: 1rem;
