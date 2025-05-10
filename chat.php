@@ -9,17 +9,9 @@ if (!isset($_SESSION['id_user'])) {
 require_once "connect.php";
 
 if (!isset($_SESSION['id_chat']) || isset($_GET['new_chat'])) {
-    $stmt = mysqli_prepare($connect, "INSERT INTO chats (id_user) VALUES (?)");
-    if (!$stmt) {
-        die("Błąd przygotowania zapytania: " . mysqli_error($connect));
-    }
-    mysqli_stmt_bind_param($stmt, "i", $_SESSION['id_user']);
-    if (!mysqli_stmt_execute($stmt)) {
-        die("Błąd wykonania zapytania: " . mysqli_stmt_error($stmt));
-    }
-
-    $_SESSION['id_chat'] = mysqli_insert_id($connect);
-    mysqli_stmt_close($stmt);
+    $stmt = $connect->prepare("INSERT INTO chats (id_user) VALUES (:id_user) RETURNING id_chat");
+    $stmt->execute(['id_user' => $_SESSION['id_user']]);
+    $_SESSION['id_chat'] = $stmt->fetchColumn();
 
     if (isset($_GET['new_chat'])) {
         header("Location: chat.php");
@@ -30,28 +22,18 @@ if (!isset($_SESSION['id_chat']) || isset($_GET['new_chat'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_query = $_POST['query'];
 
-    $stmt = mysqli_prepare($connect, "SELECT prompt, completion FROM chat_history WHERE id_chat = ? ORDER BY created_at ASC");
-    if (!$stmt) {
-        die("Błąd przygotowania zapytania: " . mysqli_error($connect));
-    }
-    mysqli_stmt_bind_param($stmt, "i", $_SESSION['id_chat']);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-
-    $history = [];
-    while ($row = mysqli_fetch_assoc($result)) {
-        $history[] = [
-            "prompt" => $row['prompt'],
-            "completion" => $row['completion']
-        ];
-    }
-    mysqli_stmt_close($stmt);
+    $stmt = $connect->prepare("SELECT prompt, completion FROM chat_history WHERE id_chat = :id_chat ORDER BY created_at ASC");
+    $stmt->execute(['id_chat' => $_SESSION['id_chat']]);
+    $history = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $history_json = escapeshellarg(json_encode($history, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-
     $escaped_query = escapeshellarg($user_query);
 
-    $command = "source /Applications/XAMPP/xamppfiles/htdocs/ChatBook/chbk-env/bin/activate && python3 connect.py $escaped_query $history_json 2>&1";
+    //MacOS
+    $command = "source chbk-env/bin/activate && python3 connect.py $escaped_query $history_json 2>&1";
+
+    //Windows
+    //$command = "python connect.py $escaped_query $history_json 2>&1";
 
     $output = shell_exec($command);
 
@@ -61,20 +43,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $response = nl2br(htmlspecialchars($output));
 
-    $stmt = mysqli_prepare($connect, "INSERT INTO chat_history (id_chat, prompt, completion) VALUES (?, ?, ?)");
-    if (!$stmt) {
-        die("Błąd przygotowania zapytania: " . mysqli_error($connect));
-    }
-    mysqli_stmt_bind_param($stmt, "iss", $_SESSION['id_chat'], $user_query, $response);
-    if (!mysqli_stmt_execute($stmt)) {
-        die("Błąd wykonania zapytania: " . mysqli_stmt_error($stmt));
-    }
-    mysqli_stmt_close($stmt);
+    $stmt = $connect->prepare("INSERT INTO chat_history (id_chat, prompt, completion) VALUES (:id_chat, :prompt, :completion)");
+    $stmt->execute([
+        'id_chat' => $_SESSION['id_chat'],
+        'prompt' => $user_query,
+        'completion' => $response
+    ]);
 
     echo json_encode(['response' => $response]);
     exit();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pl">
@@ -102,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <img src="chbk_logo.svg" alt="ChatBook Logo"
             style="width: 3rem; height: 3rem; margin-right: 0.5rem;">
           <h1 class="mb-0 fs-3" style="color: #007bff;">ChatBook
-            <span class="header-badge">v0.06</span>
+            <span class="header-badge">v0.07</span>
           </h1>
         </div>
       </div>

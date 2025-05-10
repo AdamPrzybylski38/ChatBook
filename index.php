@@ -55,7 +55,7 @@ if (isset($_SESSION['login_error'])) {
           <img src="chbk_logo.svg" alt="ChatBook Logo"
             style="width: 3rem; height: 3rem; margin-right: 0.5rem;">
           <h1 class="mb-0 fs-3" style="color: #007bff;">ChatBook
-            <span class="header-badge">v0.06</span>
+            <span class="header-badge">v0.07</span>
           </h1>
         </div>
       </div>

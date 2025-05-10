@@ -10,17 +10,16 @@ if (!isset($_SESSION['id_user'])) {
 $id_user = $_SESSION['id_user'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $delete_query = "DELETE FROM user_interests WHERE id_user = ?";
-    $stmt_delete = mysqli_prepare($connect, $delete_query);
-    mysqli_stmt_bind_param($stmt_delete, 'i', $id_user);
-    mysqli_stmt_execute($stmt_delete);
+    $connect->prepare("DELETE FROM user_interests WHERE id_user = :id_user")
+            ->execute(['id_user' => $id_user]);
 
     if (!empty($_POST['interests'])) {
-        $insert_query = "INSERT INTO user_interests (id_user, id_interest) VALUES (?, ?)";
-        $stmt_insert = mysqli_prepare($connect, $insert_query);
+        $stmt_insert = $connect->prepare("INSERT INTO user_interests (id_user, id_interest) VALUES (:id_user, :id_interest)");
         foreach ($_POST['interests'] as $id_interest) {
-            mysqli_stmt_bind_param($stmt_insert, 'ii', $id_user, $id_interest);
-            mysqli_stmt_execute($stmt_insert);
+            $stmt_insert->execute([
+                'id_user' => $id_user,
+                'id_interest' => $id_interest
+            ]);
         }
     }
 
@@ -28,18 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
 }
 
-$all_interests_result = mysqli_query($connect, "SELECT id_interest, name FROM interests ORDER BY name");
-
-$user_interests = [];
-$res_user = mysqli_prepare($connect, "SELECT id_interest FROM user_interests WHERE id_user = ?");
-mysqli_stmt_bind_param($res_user, 'i', $id_user);
-mysqli_stmt_execute($res_user);
-$result = mysqli_stmt_get_result($res_user);
-while ($row = mysqli_fetch_assoc($result)) {
-    $user_interests[] = $row['id_interest'];
-}
+$all_interests_result = $connect->query("SELECT id_interest, name FROM interests ORDER BY name");
+$user_interests_stmt = $connect->prepare("SELECT id_interest FROM user_interests WHERE id_user = :id_user");
+$user_interests_stmt->execute(['id_user' => $id_user]);
+$user_interests = $user_interests_stmt->fetchAll(PDO::FETCH_COLUMN);
 ?>
-
 <!doctype html>
 <html lang="pl">
 <head>
@@ -70,7 +62,7 @@ while ($row = mysqli_fetch_assoc($result)) {
             <h4 class="mb-4 text-center">Wybierz swoje zainteresowania <?= htmlspecialchars($_SESSION["username"]) ?></h4>
             <form method="post" action="">
                 <div class="mb-3">
-                    <?php while ($row = mysqli_fetch_assoc($all_interests_result)): ?>
+                    <?php while ($row = $all_interests_result->fetch(PDO::FETCH_ASSOC)): ?>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="interests[]"
                                    value="<?= $row['id_interest'] ?>"

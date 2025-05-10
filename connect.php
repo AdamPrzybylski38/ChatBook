@@ -1,6 +1,8 @@
 <?php
-$connect = mysqli_connect("localhost", "root", "", "ChatBook");
-if (!$connect) {
-    die("Błąd połączenia z bazą danych: " . mysqli_connect_error());
+try {
+    $connect = new PDO("pgsql:host=localhost;dbname=ChatBook", "postgres", "postgres");
+    $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Błąd połączenia z bazą danych: " . $e->getMessage());
 }
 ?>

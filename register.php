@@ -13,41 +13,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 
-    $query_check_email = "SELECT * FROM users WHERE email = ?";
-    $stmt_check_email = mysqli_prepare($connect, $query_check_email);
-    mysqli_stmt_bind_param($stmt_check_email, 's', $email);
-    mysqli_stmt_execute($stmt_check_email);
-    $result_check_email = mysqli_stmt_get_result($stmt_check_email);
+    $stmt = $connect->prepare("SELECT 1 FROM users WHERE email = :email");
+    $stmt->execute(['email' => $email]);
 
-    if (mysqli_num_rows($result_check_email) > 0) {
+    if ($stmt->fetch()) {
         echo "Email już jest używany.";
         exit();
     }
 
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-    $query_insert_user = "INSERT INTO users (email, username, password) VALUES (?, ?, ?)";
-    $stmt_insert_user = mysqli_prepare($connect, $query_insert_user);
-    mysqli_stmt_bind_param($stmt_insert_user, 'sss', $email, $username, $hashed_password);
+    $stmt = $connect->prepare("INSERT INTO users (email, username, password) VALUES (:email, :username, :password) RETURNING id_user");
+    $stmt->execute([
+        'email' => $email,
+        'username' => $username,
+        'password' => $hashed_password
+    ]);
 
-    if (mysqli_stmt_execute($stmt_insert_user)) {
-        $_SESSION['id_user'] = mysqli_insert_id($connect);
-        $_SESSION['username'] = $username;
+    $_SESSION['id_user'] = $stmt->fetchColumn();
+    $_SESSION['username'] = $username;
 
-        $insert = "INSERT INTO activity (id_user) VALUES (?)";
-        $insert_stmt = mysqli_prepare($connect, $insert);
-        mysqli_stmt_bind_param($insert_stmt, 'i', $_SESSION['id_user']);
-        mysqli_stmt_execute($insert_stmt);
+    $insert = $connect->prepare("INSERT INTO activity (id_user) VALUES (:id_user) RETURNING id_activity");
+    $insert->execute(['id_user' => $_SESSION['id_user']]);
+    $_SESSION['id_activity'] = $insert->fetchColumn();
 
-        $_SESSION['id_activity'] = mysqli_insert_id($connect);
-
-        header('Location: interests.php');
-        exit();
-    } else {
-        echo "Błąd podczas rejestracji.";
-    }
-
-    mysqli_stmt_close($stmt_check_email);
-    mysqli_stmt_close($stmt_insert_user);
+    header('Location: interests.php');
+    exit();
 }
 ?>
