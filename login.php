@@ -28,10 +28,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header('Location: chat.php');
             exit();
         } else {
-            echo "Nieprawidłowe hasło.";
+            $_SESSION['login_error'] = 'Nieprawidłowe hasło.';
+            header('Location: index.php');
+            exit();
         }
     } else {
-        echo "Użytkownik o podanym emailu nie istnieje.";
+        $_SESSION['login_error'] = 'Użytkownik o podanym adresie email nie istnieje.';
+        header('Location: index.php');
+        exit();
     }
 
     mysqli_stmt_close($stmt);

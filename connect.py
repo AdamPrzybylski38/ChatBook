@@ -2,7 +2,7 @@ import sys
 import lmstudio as lms
 import json
 
-model = lms.llm("bielik-11b-v2.3-instruct")
+model = lms.llm("llama-3.2-3b-instruct")
 
 if len(sys.argv) > 2:
     user_query = sys.argv[1]

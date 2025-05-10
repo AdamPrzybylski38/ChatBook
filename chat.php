@@ -132,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <footer>
     <div class="footer">
-        Model: bielik-11b-v2.3-instruct
+        Model: llama-3.2-3b-instruct
     </div>
 </footer>
 

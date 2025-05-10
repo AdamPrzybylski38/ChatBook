@@ -4,6 +4,12 @@ if (isset($_SESSION['id_user'])) {
     header('Location: chat.php');
     exit();
 }
+
+$login_error = '';
+if (isset($_SESSION['login_error'])) {
+    $login_error = $_SESSION['login_error'];
+    unset($_SESSION['login_error']);
+}
 ?>
 
 <!doctype html>
@@ -61,6 +67,13 @@ if (isset($_SESSION['id_user'])) {
     <div class="col-md-6 col-lg-5">
         <div id="loginForm" class="auth-box" style="display: block;">
             <h3 class="mb-4 text-center">Logowanie</h3>
+            
+            <?php if (!empty($login_error)): ?>
+    <div class="alert alert-danger" role="alert">
+        <?= htmlspecialchars($login_error) ?>
+    </div>
+<?php endif; ?>
+
             <form action="login.php" method="post">
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
