@@ -8,7 +8,7 @@ v0.02 - prosty interfejs umożliwiający pisanie z lokalnym modelem AI wzbogacon
 v0.03 - system logowania i zapis historii chatu do bazy danych\
 v0.04 - tworzenie nowych konwersacji\
 v0.05 - dodano logi aktywności użytkoników, zachowanie kontekstu rozmowy\
-v0.06 - dodano wybór zainteresowań, poprawiono błędy
+v0.06 - dodano wybór zainteresowań, poprawiono błędy\
 v0.07 - zmieniono system baz danych z MySQL na PostgreSQL
 
 ## Wymagania
