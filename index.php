@@ -1,9 +1,12 @@
 <?php
 session_start();
+
 if (isset($_SESSION['id_user'])) {
     header('Location: chat.php');
     exit();
 }
+
+require_once "connect.php";
 
 $login_error = '';
 $register_error = '';
@@ -31,23 +34,6 @@ if (isset($_SESSION['register_error'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        .auth-box {
-            background-color: #fff;
-            border: 1px solid #dee2e6;
-            border-radius: 1rem;
-            padding: 2rem;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            width: 100%;
-        }
-
-        main {
-            min-height: 80vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    </style>
 </head>
 
 <body class="bg-light">
@@ -97,11 +83,13 @@ if (isset($_SESSION['register_error'])) {
 
             <div id="registrationForm" class="auth-box" style="display: <?= $show_register_form ? 'block' : 'none' ?>;">
                 <h3 class="mb-4 text-center">Rejestracja</h3>
+
                 <?php if (!empty($register_error)): ?>
                     <div class="alert alert-danger" role="alert">
                         <?= htmlspecialchars($register_error) ?>
                     </div>
                 <?php endif; ?>
+
                 <form action="register.php" method="post">
                     <div class="mb-3">
                         <label for="email-reg" class="form-label">Email</label>
@@ -126,6 +114,7 @@ if (isset($_SESSION['register_error'])) {
                     </div>
                 </form>
             </div>
+
         </div>
     </main>
 
