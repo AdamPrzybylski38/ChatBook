@@ -9,7 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $confirm_password = htmlspecialchars($_POST['confirm_password']);
 
     if ($password !== $confirm_password) {
-        echo "Hasła nie są identyczne.";
+        $_SESSION['register_error'] = 'Hasła nie są identyczne.';
+        header('Location: index.php');
         exit();
     }
 
@@ -17,9 +18,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->execute(['email' => $email]);
 
     if ($stmt->fetch()) {
-        echo "Email już jest używany.";
+        $_SESSION['register_error'] = 'Email już jest używany.';
+        header('Location: index.php');
         exit();
     }
+
 
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
