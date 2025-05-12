@@ -99,8 +99,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <br>
 
 <main>
-    <div class="chat-container">
+   <div class="chat-container">
         <div id="response-box" class="mb-3"></div>
+        <div id="suggestions" class="mb-3 d-flex flex-wrap gap-2"></div>
         <div class="input-group">
             <input type="text" name="query" id="query" class="form-control" placeholder="Wpisz zapytanie..." required>
             <button id="send-btn" class="btn btn-primary">Wyślij</button>
@@ -168,6 +169,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         scrollToBottom();
     });
+    
+    $.getJSON("suggestions.php", function (suggestions) {
+    if (suggestions.length > 0) {
+        suggestions.forEach(function (prompt) {
+            var btn = $('<button>', {
+                class: 'btn btn-outline-secondary btn-sm',
+                text: prompt,
+                click: function () {
+                    $("#query").val(prompt);
+                    $("#send-btn").click();
+                }
+            });
+            $("#suggestions").append(btn);
+        });
+    }
+});
+
 </script>
 </body>
 
