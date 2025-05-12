@@ -59,6 +59,8 @@ INSERT INTO interests (name) VALUES
 ('Podróże'),
 ('Technologia');
 
+-- Jedzenie
+
 INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Podaj przepis na jabłecznik'
 FROM interests WHERE name = 'Jedzenie';
@@ -68,17 +70,42 @@ SELECT id_interest, 'Jak zrobić kotlet schabowy?'
 FROM interests WHERE name = 'Jedzenie';
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
-SELECT id_interest, 'Najlepsze restauracje w moim mieście'
+SELECT id_interest, 'Jak powinna wyglądać zdrowa cytryna?'
 FROM interests WHERE name = 'Jedzenie';
+
+INSERT INTO prompt_suggestions (id_interest, prompt)
+SELECT id_interest, 'Jakie są najczęstsze alergie pokarmowe?'
+FROM interests WHERE name = 'Jedzenie';
+
+INSERT INTO prompt_suggestions (id_interest, prompt)
+SELECT id_interest, 'Podaj najlepsze przepisy na dania z grzybami'
+FROM interests WHERE name = 'Jedzenie';
+
+INSERT INTO prompt_suggestions (id_interest, prompt)
+SELECT id_interest, 'Ile się gotuje jajka na twardo?'
+FROM interests WHERE name = 'Jedzenie';
+
+-- Muzyka
+
+INSERT INTO prompt_suggestions (id_interest, prompt)
+SELECT id_interest, 'Jak nastroić pianino?' FROM interests WHERE name = 'Muzyka';
+
+INSERT INTO prompt_suggestions (id_interest, prompt)
+SELECT id_interest, 'Jak zagrać podstawowe akordy na gitarze?' FROM interests WHERE name = 'Muzyka';
+
+INSERT INTO prompt_suggestions (id_interest, prompt)
+SELECT id_interest, 'Najlepsze albumy jazzowe' FROM interests WHERE name = 'Muzyka';
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Podaj najlepsze utwory rockowe' FROM interests WHERE name = 'Muzyka';
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
-SELECT id_interest, 'Jak zagrać gitarę - podstawowe akordy' FROM interests WHERE name = 'Muzyka';
+SELECT id_interest, 'Kim był Fryderyk Chopin?' FROM interests WHERE name = 'Muzyka';
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
-SELECT id_interest, 'Najlepsze albumy jazzowe' FROM interests WHERE name = 'Muzyka';
+SELECT id_interest, 'Kto jest wokalistą Republiki?' FROM interests WHERE name = 'Muzyka';
+
+-- Filmy
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Top 10 filmów komediowych' FROM interests WHERE name = 'Filmy';
@@ -90,13 +117,35 @@ INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Kiedy wyszedła pierwsza część Gwiezdnych Wojen?' FROM interests WHERE name = 'Filmy';
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
+SELECT id_interest, 'Jakie filmy zrobił Andrzej Wajda?' FROM interests WHERE name = 'Filmy';
+
+INSERT INTO prompt_suggestions (id_interest, prompt)
+SELECT id_interest, 'O czym był pierwszy nakręcony film w historii?' FROM interests WHERE name = 'Filmy';
+
+INSERT INTO prompt_suggestions (id_interest, prompt)
+SELECT id_interest, 'Kiedy wyszedła pierwsza część Gwiezdnych Wojen?' FROM interests WHERE name = 'Filmy';
+
+-- Sztuka
+
+INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Jak narysować portret?' FROM interests WHERE name = 'Sztuka';
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
-SELECT id_interest, 'Najlepsze galerie sztuki w moim mieście' FROM interests WHERE name = 'Sztuka';
+SELECT id_interest, 'Jakie są najlepsze galerie sztuki w Paryżu?' FROM interests WHERE name = 'Sztuka';
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Historia najważniejszych przedmiotów sztuki' FROM interests WHERE name = 'Sztuka';
+
+INSERT INTO prompt_suggestions (id_interest, prompt)
+SELECT id_interest, 'Jakie są najsłynniejsze dzieła Vincenta van Gogha?' FROM interests WHERE name = 'Sztuka';
+
+INSERT INTO prompt_suggestions (id_interest, prompt)
+SELECT id_interest, 'Ile jest części Dziadów?' FROM interests WHERE name = 'Sztuka';
+
+INSERT INTO prompt_suggestions (id_interest, prompt)
+SELECT id_interest, 'O czym jest Balladyna?' FROM interests WHERE name = 'Sztuka';
+
+-- Sport
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Jak zacząć biegać?' FROM interests WHERE name = 'Sport';
@@ -108,13 +157,35 @@ INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Jak trenować do maratonu?' FROM interests WHERE name = 'Sport';
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
-SELECT id_interest, 'Jak nauczyć się programować w Pythonie' FROM interests WHERE name = 'Nauka';
+SELECT id_interest, 'Ile na klatę mordo?' FROM interests WHERE name = 'Sport';
+
+INSERT INTO prompt_suggestions (id_interest, prompt)
+SELECT id_interest, 'Gdzie odbyły się ostatnie igrzyska olimpijskie?' FROM interests WHERE name = 'Sport';
+
+INSERT INTO prompt_suggestions (id_interest, prompt)
+SELECT id_interest, 'Jakie jest dzienne zapotrzebowanie kaloryczne u sportowców?' FROM interests WHERE name = 'Sport';
+
+-- Nauka
+
+INSERT INTO prompt_suggestions (id_interest, prompt)
+SELECT id_interest, 'Jak nauczyć się programować w Pythonie?' FROM interests WHERE name = 'Nauka';
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Podaj mi 10 najważniejszych faktów z historii matematyki' FROM interests WHERE name = 'Nauka';
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Jak przygotować się do matury z języka polskiego?' FROM interests WHERE name = 'Nauka';
+
+INSERT INTO prompt_suggestions (id_interest, prompt)
+SELECT id_interest, 'Jak obliczyć deltę?' FROM interests WHERE name = 'Nauka';
+
+INSERT INTO prompt_suggestions (id_interest, prompt)
+SELECT id_interest, 'Podaj pierwsze prawo Newtona' FROM interests WHERE name = 'Nauka';
+
+INSERT INTO prompt_suggestions (id_interest, prompt)
+SELECT id_interest, 'Ile wynosi prędkość światła?' FROM interests WHERE name = 'Nauka';
+
+-- Podróże
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Podaj najlepsze miejsca do zwiedzania w Japonii' FROM interests WHERE name = 'Podróże';
@@ -126,6 +197,17 @@ INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Rekomenduj mi trasy rowerowe w Włoszech' FROM interests WHERE name = 'Podróże';
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
+SELECT id_interest, 'Co zabrać ze sobą na biwak?' FROM interests WHERE name = 'Podróże';
+
+INSERT INTO prompt_suggestions (id_interest, prompt)
+SELECT id_interest, 'Jak długo czeka się na wizę do USA?' FROM interests WHERE name = 'Podróże';
+
+INSERT INTO prompt_suggestions (id_interest, prompt)
+SELECT id_interest, 'Gdzie się wybrać na majówkę?' FROM interests WHERE name = 'Podróże';
+
+-- Technologia
+
+INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Jak zainstalować system operacyjny Linux?' FROM interests WHERE name = 'Technologia';
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
@@ -133,3 +215,12 @@ SELECT id_interest, 'Kto wynalazł Internet?' FROM interests WHERE name = 'Techn
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Jak zabezpieczyć swoje hasła online?' FROM interests WHERE name = 'Technologia';
+
+INSERT INTO prompt_suggestions (id_interest, prompt)
+SELECT id_interest, 'Jak działa silnik parowy?' FROM interests WHERE name = 'Technologia';
+
+INSERT INTO prompt_suggestions (id_interest, prompt)
+SELECT id_interest, 'Kim był Alan Turing?' FROM interests WHERE name = 'Technologia';
+
+INSERT INTO prompt_suggestions (id_interest, prompt)
+SELECT id_interest, 'Jak zbudowano piramidy?' FROM interests WHERE name = 'Technologia';
