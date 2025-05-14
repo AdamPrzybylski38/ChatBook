@@ -13,7 +13,7 @@ CREATE TABLE chats (
 );
 
 CREATE TABLE chat_history (
-    id SERIAL PRIMARY KEY,
+    id_history SERIAL PRIMARY KEY,
     id_chat INT NOT NULL,
     prompt TEXT NOT NULL,
     completion TEXT NOT NULL,
