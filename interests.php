@@ -10,18 +10,12 @@ if (!isset($_SESSION['id_user'])) {
 $id_user = $_SESSION['id_user'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $connect->prepare("DELETE FROM user_interests WHERE id_user = :id_user")
-            ->execute(['id_user' => $id_user]);
+    $interests = isset($_POST['interests']) ? array_map('intval', $_POST['interests']) : [];
 
-    if (!empty($_POST['interests'])) {
-        $stmt_insert = $connect->prepare("INSERT INTO user_interests (id_user, id_interest) VALUES (:id_user, :id_interest)");
-        foreach ($_POST['interests'] as $id_interest) {
-            $stmt_insert->execute([
-                'id_user' => $id_user,
-                'id_interest' => $id_interest
-            ]);
-        }
-    }
+    $stmt = $connect->prepare("CALL update_user_interests(:id_user, :interests)");
+    $stmt->bindValue(':id_user', $id_user, PDO::PARAM_INT);
+    $stmt->bindValue(':interests', '{' . implode(',', $interests) . '}', PDO::PARAM_STR);
+    $stmt->execute();
 
     header('Location: chat.php');
     exit();
@@ -32,56 +26,58 @@ $user_interests_stmt = $connect->prepare("SELECT id_interest FROM user_interests
 $user_interests_stmt->execute(['id_user' => $id_user]);
 $user_interests = $user_interests_stmt->fetchAll(PDO::FETCH_COLUMN);
 ?>
+
 <!doctype html>
 <html lang="pl">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Wybierz zainteresowania</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .auth-box {
-            background-color: #fff;
-            border: 1px solid #dee2e6;
-            border-radius: 1rem;
-            padding: 2rem;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        }
-        main {
-            min-height: 80vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
+
 <body class="bg-light">
+    <header>
+        <div class="container mt-3">
+            <div class="text-center mb-3">
+                <div class="d-inline-flex align-items-center">
+                    <img src="chbk_logo.svg" alt="ChatBook Logo"
+                        style="width: 3rem; height: 3rem; margin-right: 0.5rem;">
+                    <h1 class="mb-0 fs-2 text-primary">
+                        ChatBook <span class="header-badge">v0.08</span>
+                    </h1>
+                </div>
+            </div>
+    </header>
 
-<main class="container">
-    <div class="col-md-6 col-lg-5">
-        <div class="auth-box">
-            <h4 class="mb-4 text-center">Wybierz swoje zainteresowania <?= htmlspecialchars($_SESSION["username"]) ?></h4>
-            <form method="post" action="">
-                <div class="mb-3">
-                    <?php while ($row = $all_interests_result->fetch(PDO::FETCH_ASSOC)): ?>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="interests[]"
-                                   value="<?= $row['id_interest'] ?>"
-                                   id="int<?= $row['id_interest'] ?>"
-                                   <?= in_array($row['id_interest'], $user_interests) ? 'checked' : '' ?>>
-                            <label class="form-check-label" for="int<?= $row['id_interest'] ?>">
-                                <?= htmlspecialchars($row['name']) ?>
-                            </label>
-                        </div>
-                    <?php endwhile; ?>
-                </div>
-                <div class="d-flex justify-content-between">
-                    <a href="chat.php" class="btn btn-secondary">Pomiń</a>
-                    <button type="submit" class="btn btn-primary">Zapisz zainteresowania</button>
-                </div>
-            </form>
+    <main class="container">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-5 mx-auto">
+            <div class="auth-box">
+                <h3 class="mb-4 text-center">Wybierz swoje zainteresowania
+                    <?= htmlspecialchars($_SESSION["username"]) ?></h3>
+                <form method="post" action="">
+                    <div class="mb-3">
+                        <?php while ($row = $all_interests_result->fetch(PDO::FETCH_ASSOC)): ?>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="interests[]"
+                                    value="<?= $row['id_interest'] ?>" id="int<?= $row['id_interest'] ?>"
+                                    <?= in_array($row['id_interest'], $user_interests) ? 'checked' : '' ?>>
+                                <label class="form-check-label" for="int<?= $row['id_interest'] ?>">
+                                    <?= htmlspecialchars($row['name']) ?>
+                                </label>
+                            </div>
+                        <?php endwhile; ?>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <a href="chat.php" class="btn btn-secondary">Pomiń</a>
+                        <button type="submit" class="btn btn-primary">Zapisz zainteresowania</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
-</main>
-
+    </main>
 </body>
+
 </html>

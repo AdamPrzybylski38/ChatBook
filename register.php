@@ -3,44 +3,43 @@ session_start();
 require 'connect.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $email = $_POST['email'];
-    $username = htmlspecialchars($_POST['username']);
-    $password = htmlspecialchars($_POST['password']);
-    $confirm_password = htmlspecialchars($_POST['confirm_password']);
+    try {
+        $email = $_POST['email'];
+        $username = htmlspecialchars($_POST['username']);
+        $password = htmlspecialchars($_POST['password']);
+        $confirm_password = htmlspecialchars($_POST['confirm_password']);
 
-    if ($password !== $confirm_password) {
-        $_SESSION['register_error'] = 'Hasła nie są identyczne.';
+        if ($password !== $confirm_password) {
+            throw new Exception('Hasła nie są identyczne.');
+        }
+
+        $stmt = $connect->prepare("SELECT register_user(:email, :username, :password) AS id_user");
+        $stmt->execute([
+            'email' => $email,
+            'username' => $username,
+            'password' => $password
+        ]);
+
+        $_SESSION['id_user'] = $stmt->fetchColumn();
+        $_SESSION['username'] = $username;
+
+        $stmt = $connect->prepare("SELECT id_activity FROM activity WHERE id_user = :id_user ORDER BY id_activity DESC LIMIT 1");
+        $stmt->execute(['id_user' => $_SESSION['id_user']]);
+        $_SESSION['id_activity'] = $stmt->fetchColumn();
+
+        header('Location: interests.php');
+        exit();
+    } catch (PDOException $e) {
+        if ($e->getCode() === 'P0001' && str_contains($e->getMessage(), 'EMAIL_TAKEN')) {
+            $_SESSION['register_error'] = 'Email już jest używany.';
+        } else {
+            $_SESSION['register_error'] = 'Błąd rejestracji.';
+        }
+        header('Location: index.php');
+        exit();
+    } catch (Exception $e) {
+        $_SESSION['register_error'] = $e->getMessage();
         header('Location: index.php');
         exit();
     }
-
-    $stmt = $connect->prepare("SELECT 1 FROM users WHERE email = :email");
-    $stmt->execute(['email' => $email]);
-
-    if ($stmt->fetch()) {
-        $_SESSION['register_error'] = 'Email już jest używany.';
-        header('Location: index.php');
-        exit();
-    }
-
-
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-
-    $stmt = $connect->prepare("INSERT INTO users (email, username, password) VALUES (:email, :username, :password) RETURNING id_user");
-    $stmt->execute([
-        'email' => $email,
-        'username' => $username,
-        'password' => $hashed_password
-    ]);
-
-    $_SESSION['id_user'] = $stmt->fetchColumn();
-    $_SESSION['username'] = $username;
-
-    $insert = $connect->prepare("INSERT INTO activity (id_user) VALUES (:id_user) RETURNING id_activity");
-    $insert->execute(['id_user' => $_SESSION['id_user']]);
-    $_SESSION['id_activity'] = $insert->fetchColumn();
-
-    header('Location: interests.php');
-    exit();
 }
-?>

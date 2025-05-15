@@ -1,13 +1,15 @@
 <?php
 session_start();
 
+// przekierowanie do strony logowania jeśli uytkownik nie jest zalogowany
 if (!isset($_SESSION['id_user'])) {
     header('Location: index.php');
     exit();
 }
 
-require_once "connect.php";
+require_once "connect.php"; // połączenie z bazą danych
 
+// tworzenie nowej sesji czatu jesli nie istnieje lub stworzono nowy
 if (!isset($_SESSION['id_chat']) || isset($_GET['new_chat'])) {
     $stmt = $connect->prepare("INSERT INTO chats (id_user) VALUES (:id_user) RETURNING id_chat");
     $stmt->execute(['id_user' => $_SESSION['id_user']]);
@@ -19,30 +21,38 @@ if (!isset($_SESSION['id_chat']) || isset($_GET['new_chat'])) {
     }
 }
 
+// obsluga zapytania
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_query = $_POST['query'];
 
+    // pobieranie historii czatu
     $stmt = $connect->prepare("SELECT prompt, completion FROM chat_history WHERE id_chat = :id_chat ORDER BY created_at ASC");
     $stmt->execute(['id_chat' => $_SESSION['id_chat']]);
     $history = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    // konwersja historii czatu do formatu JSON
     $history_json = escapeshellarg(json_encode($history, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
     $escaped_query = escapeshellarg($user_query);
 
-    //MacOS
+    // uruchomienie skryptu Python
+    //MacOS & Linux
     $command = "source chbk-env/bin/activate && python3 connect.py $escaped_query $history_json 2>&1";
 
     //Windows
     //$command = "python connect.py $escaped_query $history_json 2>&1";
 
+    // wykonanie komendy
     $output = shell_exec($command);
 
+    // sprawdzenie błędów
     if ($output === null) {
         die("Błąd wykonania skryptu Python.");
     }
 
+    // przetwarzenie odpowiedzi
     $response = nl2br(htmlspecialchars($output));
 
+    // dodanie zapytania i odpowiedzi do historii czatu
     $stmt = $connect->prepare("INSERT INTO chat_history (id_chat, prompt, completion) VALUES (:id_chat, :prompt, :completion)");
     $stmt->execute([
         'id_chat' => $_SESSION['id_chat'],
@@ -69,124 +79,127 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body>
-<header>
-  <div class="container mt-3 position-relative">
-    <div class="d-flex justify-content-between align-items-center mb-4 position-relative">
+    <header class="mb-4">
+        <div class="container mt-3">
+            <div class="text-center mb-3">
+                <div class="d-inline-flex align-items-center">
+                    <img src="chbk_logo.svg" alt="ChatBook Logo"
+                        style="width: 3rem; height: 3rem; margin-right: 0.5rem;">
+                    <h1 class="mb-0 fs-2 text-primary">
+                        ChatBook <span class="header-badge">v0.08</span>
+                    </h1>
+                </div>
+            </div>
 
-      <div class="flex-shrink-0">
-        <a href="chat.php?new_chat=1" class="btn btn-outline-primary">Nowy chat</a>
-      </div>
+            <div class="bg-light text-dark rounded py-2 px-3">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
 
-      <div class="position-absolute top-50 start-50 translate-middle-x" style="transform: translate(-50%, -50%);">
-        <div class="d-flex align-items-center">
-          <img src="chbk_logo.svg" alt="ChatBook Logo"
-            style="width: 3rem; height: 3rem; margin-right: 0.5rem;">
-          <h1 class="mb-0 fs-3" style="color: #007bff;">ChatBook
-            <span class="header-badge">v0.07</span>
-          </h1>
+                    <div class="mb-0 fs-4 fw-semibold">
+                        Witaj, <?= htmlspecialchars($_SESSION["username"]) ?>!
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a href="interests.php" class="btn btn-outline-primary">Zainteresowania</a>
+                        <a href="logout.php" class="btn btn-danger">Wyloguj się</a>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+    </header>
 
-      <div class="d-flex align-items-center flex-shrink-0">
-        <h2 class="mb-0 fs-5 me-3">Witaj, <?= htmlspecialchars($_SESSION["username"]) ?>!</h2>
-        <a href="logout.php" class="btn btn-danger">Wyloguj się</a>
-        <a href="interests.php" class="btn btn-outline-primary ms-3">Zainteresowania</a>
-      </div>
-    </div>
-  </div>
-</header>
+    <br>
 
-<br>
-
-<main>
-   <div class="chat-container">
-        <div id="response-box" class="mb-3"></div>
-        <div id="suggestions" class="mb-3 d-flex flex-wrap gap-2"></div>
-        <div class="input-group">
-            <input type="text" name="query" id="query" class="form-control" placeholder="Wpisz zapytanie..." required>
-            <button id="send-btn" class="btn btn-primary">Wyślij</button>
+    <main>
+        <div class="chat-container">
+            <div id="response-box" class="mb-3"></div>
+            <div id="suggestions" class="mb-3 d-flex flex-wrap justify-content-center gap-2"></div>
+            <div class="input-group">
+                <a href="chat.php?new_chat=1" class="btn btn-secondary">+</a>
+                <input type="text" name="query" id="query" class="form-control" placeholder="Wpisz zapytanie..."
+                    required>
+                <button id="send-btn" class="btn btn-primary">Wyślij</button>
+            </div>
         </div>
-    </div>
-</main>
+    </main>
 
-<br>
+    <script>
+        $(document).ready(function () {
+            // automatyczne przewijanie chatu do dołu
+            function scrollToBottom() {
+                const box = $('#response-box');
+                box.scrollTop(box[0].scrollHeight);
+            }
 
-<footer>
-    <div class="footer">
-        Model: llama-3.2-3b-instruct
-    </div>
-</footer>
+            // funkcja do wysyłania zapytania
+            function sendQuery() {
+                var query = $("#query").val();
+                if (!query) return;
+                $("#query").val(""); // czyszczenie pola tekstowego
 
-<script>
-    $(document).ready(function () {
-        function scrollToBottom() {
-            const box = $('#response-box');
-            box.scrollTop(box[0].scrollHeight);
-        }
+                // dodanie wiadomości użytkownika do chatu
+                var userMessage = $('<div>', {
+                    class: 'message-user',
+                    text: query
+                });
+                $("#response-box").append(userMessage);
 
-        function sendQuery() {
-            var query = $("#query").val();
-            if (!query) return;
-            $("#query").val("");
+                // animacja ładowania
+                var loadingDots = $('<div class="loading-dots"><span></span><span></span><span></span></div>');
+                $("#response-box").append(loadingDots);
+                loadingDots.show();
+                scrollToBottom();
 
-            var userMessage = $('<div>', {
-                class: 'message-user',
-                text: query
-            });
-            $("#response-box").append(userMessage);
+                //wysyłanie zapytania do chat.php
+                $.post("chat.php", { query: query }, function (data) {
+                    try {
+                        var response = JSON.parse(data).response;
+                        loadingDots.remove();
 
-            var loadingDots = $('<div class="loading-dots"><span></span><span></span><span></span></div>');
-            $("#response-box").append(loadingDots);
-            loadingDots.show();
-            scrollToBottom();
+                        // dodanie odpowiedzi AI do chatu
+                        var aiMessage = $('<div>', {
+                            class: 'message-ai',
+                            html: response
+                        });
+                        $("#response-box").append(aiMessage);
 
-            $.post("chat.php", { query: query }, function (data) {
-                try {
-                    var response = JSON.parse(data).response;
-                    loadingDots.remove();
+                        scrollToBottom();
+                    } catch (e) {
+                        loadingDots.remove();
+                        $("#response-box").html("Błąd w przetwarzaniu odpowiedzi");
+                    }
+                });
+            }
 
-                    var aiMessage = $('<div>', {
-                        class: 'message-ai',
-                        html: response
-                    });
-                    $("#response-box").append(aiMessage);
-
-                    scrollToBottom();
-                } catch (e) {
-                    loadingDots.remove();
-                    $("#response-box").html("Błąd w przetwarzaniu odpowiedzi");
+            // obsługa pola tekstowego i przycisku
+            $("#send-btn").click(sendQuery);
+            $("#query").keypress(function (event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    sendQuery();
                 }
             });
-        }
 
-        $("#send-btn").click(sendQuery);
-        $("#query").keypress(function (event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                sendQuery();
+            scrollToBottom();
+        });
+
+        // pobieranie sugestii z pliku suggestions.php
+        $.getJSON("suggestions.php", function (suggestions) {
+            if (suggestions.length > 0) {
+                suggestions.forEach(function (prompt) {
+                    var btn = $('<button>', {
+                        class: 'btn btn-outline-secondary btn-sm',
+                        text: prompt,
+                        click: function () {
+                            $("#query").val(prompt);
+                            $("#send-btn").click();
+                        }
+                    });
+                    $("#suggestions").append(btn);
+                });
             }
         });
 
-        scrollToBottom();
-    });
-    
-    $.getJSON("suggestions.php", function (suggestions) {
-    if (suggestions.length > 0) {
-        suggestions.forEach(function (prompt) {
-            var btn = $('<button>', {
-                class: 'btn btn-outline-secondary btn-sm',
-                text: prompt,
-                click: function () {
-                    $("#query").val(prompt);
-                    $("#send-btn").click();
-                }
-            });
-            $("#suggestions").append(btn);
-        });
-    }
-});
-
-</script>
+    </script>
 </body>
 
 </html>

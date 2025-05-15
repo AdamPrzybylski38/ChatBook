@@ -38,24 +38,20 @@ if (isset($_SESSION['register_error'])) {
 
 <body class="bg-light">
     <header>
-        <div class="container mt-3 position-relative">
-            <div class="d-flex justify-content-between align-items-center mb-4 position-relative">
-                <div class="position-absolute top-50 start-50 translate-middle-x"
-                    style="transform: translate(-50%, -50%);">
-                    <div class="d-flex align-items-center">
-                        <img src="chbk_logo.svg" alt="ChatBook Logo"
-                            style="width: 3rem; height: 3rem; margin-right: 0.5rem;">
-                        <h1 class="mb-0 fs-3" style="color: #007bff;">ChatBook
-                            <span class="header-badge">v0.07</span>
-                        </h1>
-                    </div>
+        <div class="container mt-3">
+            <div class="text-center mb-3">
+                <div class="d-inline-flex align-items-center">
+                    <img src="chbk_logo.svg" alt="ChatBook Logo"
+                        style="width: 3rem; height: 3rem; margin-right: 0.5rem;">
+                    <h1 class="mb-0 fs-2 text-primary">
+                        ChatBook <span class="header-badge">v0.08</span>
+                    </h1>
                 </div>
             </div>
-        </div>
     </header>
 
     <main class="container">
-        <div class="col-md-6 col-lg-5">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-5">
             <div id="loginForm" class="auth-box" style="display: <?= $show_register_form ? 'none' : 'block' ?>;">
                 <h3 class="mb-4 text-center">Logowanie</h3>
 
@@ -68,15 +64,15 @@ if (isset($_SESSION['register_error'])) {
                 <form action="login.php" method="post">
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="janusz.kowalski@email.com" required>
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Hasło</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="********" required>
                     </div>
                     <div class="d-flex justify-content-between">
+                        <button id="registerBtn" type="button" class="btn btn-secondary">Zarejestruj się</button>
                         <button type="submit" class="btn btn-primary">Zaloguj</button>
-                        <button id="registerBtn" type="button" class="btn btn-success">Zarejestruj się</button>
                     </div>
                 </form>
             </div>
@@ -93,24 +89,23 @@ if (isset($_SESSION['register_error'])) {
                 <form action="register.php" method="post">
                     <div class="mb-3">
                         <label for="email-reg" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email-reg" name="email" required>
+                        <input type="email" class="form-control" id="email-reg" name="email" placeholder="janusz.kowalski@email.com" required>
                     </div>
                     <div class="mb-3">
                         <label for="username" class="form-label">Nazwa użytkownika</label>
-                        <input type="text" class="form-control" id="username" name="username" required>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Janusz" required>
                     </div>
                     <div class="mb-3">
                         <label for="password-reg" class="form-label">Hasło</label>
-                        <input type="password" class="form-control" id="password-reg" name="password" required>
+                        <input type="password" class="form-control" id="password-reg" name="password" placeholder="********" required>
                     </div>
                     <div class="mb-3">
                         <label for="confirm-password" class="form-label">Powtórz hasło</label>
-                        <input type="password" class="form-control" id="confirm-password" name="confirm_password"
-                            required>
+                        <input type="password" class="form-control" id="confirm-password" name="confirm_password" placeholder="********" required>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <button type="submit" class="btn btn-success">Zarejestruj się</button>
                         <button id="loginBtn" type="button" class="btn btn-secondary">Wróć do logowania</button>
+                        <button type="submit" class="btn btn-success">Zarejestruj się</button>
                     </div>
                 </form>
             </div>
