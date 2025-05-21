@@ -1,3 +1,5 @@
+--struktura bazy danych ChatBook
+
 CREATE TABLE users (
     id_user SERIAL PRIMARY KEY,
     username VARCHAR(50) NOT NULL,
@@ -59,7 +61,7 @@ INSERT INTO interests (name) VALUES
 ('Podróże'),
 ('Technologia');
 
--- Jedzenie
+--jedzenie
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Podaj przepis na jabłecznik' FROM interests WHERE name = 'Jedzenie';
@@ -79,7 +81,7 @@ SELECT id_interest, 'Podaj najlepsze przepisy na dania z grzybami' FROM interest
 INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Ile się gotuje jajka na twardo?' FROM interests WHERE name = 'Jedzenie';
 
--- Muzyka
+--muzyka
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Jak nastroić pianino?' FROM interests WHERE name = 'Muzyka';
@@ -99,7 +101,7 @@ SELECT id_interest, 'Kim był Fryderyk Chopin?' FROM interests WHERE name = 'Muz
 INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Kto jest wokalistą Republiki?' FROM interests WHERE name = 'Muzyka';
 
--- Filmy
+--filmy
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Top 10 filmów komediowych' FROM interests WHERE name = 'Filmy';
@@ -119,7 +121,7 @@ SELECT id_interest, 'O czym był pierwszy nakręcony film w historii?' FROM inte
 INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Kiedy wyszedła pierwsza część Gwiezdnych Wojen?' FROM interests WHERE name = 'Filmy';
 
--- Sztuka
+--sztuka
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Jak narysować portret?' FROM interests WHERE name = 'Sztuka';
@@ -139,7 +141,7 @@ SELECT id_interest, 'Ile jest części Dziadów?' FROM interests WHERE name = 'S
 INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'O czym jest Balladyna?' FROM interests WHERE name = 'Sztuka';
 
--- Sport
+--sport
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Jak zacząć biegać?' FROM interests WHERE name = 'Sport';
@@ -159,7 +161,7 @@ SELECT id_interest, 'Gdzie odbyły się ostatnie igrzyska olimpijskie?' FROM int
 INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Jakie jest dzienne zapotrzebowanie kaloryczne u sportowców?' FROM interests WHERE name = 'Sport';
 
--- Nauka
+--nauka
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Jak nauczyć się programować w Pythonie?' FROM interests WHERE name = 'Nauka';
@@ -179,7 +181,7 @@ SELECT id_interest, 'Podaj pierwsze prawo Newtona' FROM interests WHERE name = '
 INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Ile wynosi prędkość światła?' FROM interests WHERE name = 'Nauka';
 
--- Podróże
+--podróże
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Podaj najlepsze miejsca do zwiedzania w Japonii' FROM interests WHERE name = 'Podróże';
@@ -199,7 +201,7 @@ SELECT id_interest, 'Jak długo czeka się na wizę do USA?' FROM interests WHER
 INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Gdzie się wybrać na majówkę?' FROM interests WHERE name = 'Podróże';
 
--- Technologia
+--technologia
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
 SELECT id_interest, 'Jak zainstalować system operacyjny Linux?' FROM interests WHERE name = 'Technologia';

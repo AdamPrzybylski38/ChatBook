@@ -1,15 +1,15 @@
 <?php
 session_start();
 
-// przekierowanie do strony logowania jeśli uytkownik nie jest zalogowany
+// sprawdzenie, czy użytkownik jest zalogowany
 if (!isset($_SESSION['id_user'])) {
     header('Location: index.php');
     exit();
 }
 
-require_once "connect.php"; // połączenie z bazą danych
+require_once "connect.php";
 
-// tworzenie nowej sesji czatu jesli nie istnieje lub stworzono nowy
+// tworzenie nowej sesji czatu
 if (!isset($_SESSION['id_chat']) || isset($_GET['new_chat'])) {
     $stmt = $connect->prepare("INSERT INTO chats (id_user) VALUES (:id_user) RETURNING id_chat");
     $stmt->execute(['id_user' => $_SESSION['id_user']]);
@@ -21,7 +21,7 @@ if (!isset($_SESSION['id_chat']) || isset($_GET['new_chat'])) {
     }
 }
 
-// obsluga zapytania
+// obsługa zapytania
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_query = $_POST['query'];
 
@@ -65,7 +65,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="pl">
 
@@ -86,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <img src="chbk_logo.svg" alt="ChatBook Logo"
                         style="width: 3rem; height: 3rem; margin-right: 0.5rem;">
                     <h1 class="mb-0 fs-2 text-primary">
-                        ChatBook <span class="header-badge">v0.08</span>
+                        ChatBook <span class="header-badge">v0.1</span>
                     </h1>
                 </div>
             </div>
@@ -112,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <main>
         <div class="chat-container">
             <div id="response-box" class="mb-3"></div>
-            <div id="suggestions" class="mb-3 d-flex flex-wrap justify-content-center gap-2"></div>
+            <div id="suggestions" class="mb-3 d-flex flex-wrap justify-content-center gap-2 px-2 px-sm-0"></div>
             <div class="input-group">
                 <a href="chat.php?new_chat=1" class="btn btn-secondary">+</a>
                 <input type="text" name="query" id="query" class="form-control" placeholder="Wpisz zapytanie..."
@@ -149,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 loadingDots.show();
                 scrollToBottom();
 
-                //wysyłanie zapytania do chat.php
+                // wysyłanie zapytania do chat.php
                 $.post("chat.php", { query: query }, function (data) {
                     try {
                         var response = JSON.parse(data).response;

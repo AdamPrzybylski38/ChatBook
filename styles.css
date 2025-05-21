@@ -80,6 +80,7 @@ main {
 #response-box {
     width: 90%;
     max-width: 100vh;
+    min-width: 50vh;
     min-height: 60vh;
     max-height: 80vh;
     overflow-y: auto;

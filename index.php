@@ -1,17 +1,20 @@
 <?php
 session_start();
 
+//sprawdzanie czy użytkownik jest już zalogowany
 if (isset($_SESSION['id_user'])) {
     header('Location: chat.php');
     exit();
 }
 
-require_once "connect.php";
+require_once "connect.php"; // połączenie z bazą danych
 
+//zmienne do przechowywania błędów
 $login_error = '';
 $register_error = '';
 $show_register_form = false;
 
+//sprawdzanie czy formularz logowania został wysłany poprawnie
 if (isset($_SESSION['login_error'])) {
     $login_error = $_SESSION['login_error'];
     unset($_SESSION['login_error']);
@@ -44,7 +47,7 @@ if (isset($_SESSION['register_error'])) {
                     <img src="chbk_logo.svg" alt="ChatBook Logo"
                         style="width: 3rem; height: 3rem; margin-right: 0.5rem;">
                     <h1 class="mb-0 fs-2 text-primary">
-                        ChatBook <span class="header-badge">v0.08</span>
+                        ChatBook <span class="header-badge">v0.1</span>
                     </h1>
                 </div>
             </div>
@@ -55,6 +58,7 @@ if (isset($_SESSION['register_error'])) {
             <div id="loginForm" class="auth-box" style="display: <?= $show_register_form ? 'none' : 'block' ?>;">
                 <h3 class="mb-4 text-center">Logowanie</h3>
 
+                <!-- wyświetlanie błędów logowania -->
                 <?php if (!empty($login_error)): ?>
                     <div class="alert alert-danger" role="alert">
                         <?= htmlspecialchars($login_error) ?>
@@ -80,6 +84,7 @@ if (isset($_SESSION['register_error'])) {
             <div id="registrationForm" class="auth-box" style="display: <?= $show_register_form ? 'block' : 'none' ?>;">
                 <h3 class="mb-4 text-center">Rejestracja</h3>
 
+                <!-- wyświetlanie błędów rejestracji -->
                 <?php if (!empty($register_error)): ?>
                     <div class="alert alert-danger" role="alert">
                         <?= htmlspecialchars($register_error) ?>
@@ -114,6 +119,7 @@ if (isset($_SESSION['register_error'])) {
     </main>
 
     <script>
+        //przełączanie między formularzami logowania i rejestracji
         $(document).ready(function () {
             $('#registerBtn').click(function () {
                 $('#loginForm').hide();

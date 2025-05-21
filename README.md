@@ -1,6 +1,6 @@
 # ChatBook
 
-Aplikacja webowa umożliwiająca interaktywne poznawanie książki z AI
+ChatBook to aplikacja webowa do interakcji z lokalnym modelem sztucznej inteligencji. Oferuje system logowania i rejestracji użytkowników, zapisuje ich zainteresowania oraz sugeruje przykładowe zapytania dla modelu AI na podstawie zainteresowań użytkowników.
 
 ## Zmiany
 
@@ -9,11 +9,13 @@ v0.03 - system logowania i zapis historii chatu do bazy danych\
 v0.04 - tworzenie nowych konwersacji\
 v0.05 - dodano logi aktywności użytkoników, zachowanie kontekstu rozmowy\
 v0.06 - dodano wybór zainteresowań, poprawiono błędy\
-v0.07 - zmieniono system baz danych z MySQL na PostgreSQL
+v0.07 - zmieniono system baz danych z MySQL na PostgreSQL\
+v0.08 - poprawione UI, dodano procedury składowane\
+v0.1 - dodano procedury składowane dla sugestii
 
 ## Wymagania
 
-1. PHP 8.4.7
+1. PHP 8.4.7 (z obsługą zapytań PostgreSQL)
 2. PostgreSQL 17.4
 3. Python 3.13.3
 4. LM Studio 0.3.15 + Python SDK
@@ -27,4 +29,4 @@ v0.07 - zmieniono system baz danych z MySQL na PostgreSQL
 4. Stwórz baze danych ChatBook.
 5. Uruchom index.php.
 
-## Polecenia SQL do bazy danych ChatBook podane są w ChatBook.sql
+## Polecenia SQL do stworzenia bazy danych **ChatBook** i procedur składowanych podane są w ChatBook.sql i procedures.sql

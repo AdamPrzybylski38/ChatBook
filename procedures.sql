@@ -88,3 +88,20 @@ BEGIN
     END IF;
 END;
 $$;
+
+--get_prompt_suggestions
+
+CREATE OR REPLACE FUNCTION get_prompt_suggestions(p_user_id INT)
+RETURNS TABLE(prompt TEXT)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT ps.prompt
+    FROM user_interests ui
+    JOIN prompt_suggestions ps ON ps.id_interest = ui.id_interest
+    WHERE ui.id_user = p_user_id
+    ORDER BY RANDOM()
+    LIMIT 3;
+END;
+$$;
