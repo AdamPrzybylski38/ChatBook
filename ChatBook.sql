@@ -62,28 +62,22 @@ INSERT INTO interests (name) VALUES
 -- Jedzenie
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
-SELECT id_interest, 'Podaj przepis na jabłecznik'
-FROM interests WHERE name = 'Jedzenie';
+SELECT id_interest, 'Podaj przepis na jabłecznik' FROM interests WHERE name = 'Jedzenie';
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
-SELECT id_interest, 'Jak zrobić kotlet schabowy?'
-FROM interests WHERE name = 'Jedzenie';
+SELECT id_interest, 'Jak zrobić kotlet schabowy?' FROM interests WHERE name = 'Jedzenie';
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
-SELECT id_interest, 'Jak powinna wyglądać zdrowa cytryna?'
-FROM interests WHERE name = 'Jedzenie';
+SELECT id_interest, 'Jak powinna wyglądać zdrowa cytryna?' FROM interests WHERE name = 'Jedzenie';
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
-SELECT id_interest, 'Jakie są najczęstsze alergie pokarmowe?'
-FROM interests WHERE name = 'Jedzenie';
+SELECT id_interest, 'Jakie są najczęstsze alergie pokarmowe?' FROM interests WHERE name = 'Jedzenie';
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
-SELECT id_interest, 'Podaj najlepsze przepisy na dania z grzybami'
-FROM interests WHERE name = 'Jedzenie';
+SELECT id_interest, 'Podaj najlepsze przepisy na dania z grzybami' FROM interests WHERE name = 'Jedzenie';
 
 INSERT INTO prompt_suggestions (id_interest, prompt)
-SELECT id_interest, 'Ile się gotuje jajka na twardo?'
-FROM interests WHERE name = 'Jedzenie';
+SELECT id_interest, 'Ile się gotuje jajka na twardo?' FROM interests WHERE name = 'Jedzenie';
 
 -- Muzyka
 
